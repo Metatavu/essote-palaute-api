@@ -1,0 +1,25 @@
+package fi.metatavu.essote.palaute.api.test.functional.tests
+
+import fi.metatavu.essote.palaute.api.test.functional.resources.TestWiremockResource
+import io.quarkus.test.common.QuarkusTestResource
+import io.quarkus.test.junit.QuarkusTest
+import org.junit.jupiter.api.Test
+import io.restassured.RestAssured.given
+import org.hamcrest.CoreMatchers.`is`
+
+/**
+ * Tests for System API
+ */
+@QuarkusTest
+@QuarkusTestResource(TestWiremockResource::class)
+class SystemTest {
+
+    @Test
+    fun testPingEndpoint() {
+        given()
+            .`when`().get("/v1/system/ping")
+            .then()
+            .statusCode(200)
+            .body(`is`("pong"))
+    }
+}

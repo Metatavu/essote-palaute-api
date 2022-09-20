@@ -61,10 +61,10 @@ class SurveysController {
      * @return SurveyQuestion or null
      */
     fun findSurveyQuestionBySurveyNameAndNumber(surveyName: String, questionNumber: Long): SurveyQuestion? {
-        val survey = listSurveyQuestions(surveyName)
+        val surveyQuestions = listSurveyQuestions(surveyName)
             ?: return null
 
-        return survey.find { it.number == questionNumber }
+        return surveyQuestions.find { it.number == questionNumber }
     }
 
     /**
@@ -99,7 +99,7 @@ class SurveysController {
 
             return file.toString(Charsets.UTF_8)
         } catch (e: Error) {
-                logger.error("Error while opening file $filePath: ${e.localizedMessage}")
+            logger.error("Error while opening file $filePath: ${e.localizedMessage}")
             throw e
         }
     }

@@ -152,7 +152,7 @@ abstract class AbstractApi {
         )
 
         return Response
-            .status(Response.Status.BAD_REQUEST)
+            .status(status)
             .entity(entity)
             .build()
     }

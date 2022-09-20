@@ -18,7 +18,7 @@ class SurveysApi: SurveysApi, AbstractApi() {
     override suspend fun findSurvey(surveyName: String): Response {
         return try {
             val survey = surveysController.findSurveyByName(surveyName)
-                ?: createNotFound("No survey found for $surveyName")
+                ?: return createNotFound("No survey found for $surveyName")
 
             createOk(survey)
         } catch (e: Error) {
@@ -32,7 +32,7 @@ class SurveysApi: SurveysApi, AbstractApi() {
                 surveyName = surveyName,
                 questionNumber = questionNumber
             )
-                ?: createNotFound("No survey for $surveyName or question for $questionNumber found")
+                ?: return createNotFound("No survey for $surveyName or question for $questionNumber found")
 
             createOk(surveysController.findSurveyQuestionSummary(
                 surveyName = surveyName,
@@ -46,7 +46,7 @@ class SurveysApi: SurveysApi, AbstractApi() {
     override suspend fun listSurveyQuestions(surveyName: String): Response {
         return try {
             val surveyQuestions = surveysController.listSurveyQuestions(surveyName)
-                ?: createNotFound("No survey found for $surveyName")
+                ?: return createNotFound("No survey found for $surveyName")
 
             createOk(surveyQuestions)
         } catch (e: Error) {
