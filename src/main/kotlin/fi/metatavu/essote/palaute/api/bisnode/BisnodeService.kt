@@ -17,8 +17,8 @@ import javax.inject.Inject
 @RequestScoped
 class BisnodeService {
 
-//    @Inject
-//    lateinit var logger: Logger
+    @Inject
+    lateinit var logger: Logger
 
     @ConfigProperty(name = "bisnode.base.url")
     lateinit var bisnodeBaseUrl: String
@@ -27,7 +27,6 @@ class BisnodeService {
     lateinit var bisnodeApiVersion: String
 
     private val pageSize = 10
-    private val reviewSyncEnabled = "bisnode.review-sync.enabled"
 
     /**
      * Gets survey question summary from Bisnode API
@@ -35,12 +34,12 @@ class BisnodeService {
      * @param surveyQuestion survey question to get the summary for
      * @return Summary for provided survey question or null if not available
      */
-    fun getSurveyQuestionSummary(surveyName: String, questionNumber: Int): SurveyQuestionSummary {
+    fun getSurveyQuestionSummary(surveyName: String, questionNumber: Long): SurveyQuestionSummary {
         return try {
             val path = "v$bisnodeApiVersion/yes-no/$surveyName/$questionNumber"
             jacksonObjectMapper().readValue(doRequest(path), SurveyQuestionSummary::class.java)
         } catch (e: Error) {
-            throw e
+            throw Error(e.localizedMessage)
         }
     }
 
@@ -69,16 +68,17 @@ class BisnodeService {
     private fun doRequest(path: String): String? {
         return try {
             val client = OkHttpClient()
-            val request = Request.Builder().url("$bisnodeBaseUrl/$path")
+            val request = Request.Builder().url("$bisnodeBaseUrl$path")
                 .addHeader("Authorization", "Bearer ${JwtUtils.createToken()}")
                 .build()
             val response = client.newCall(request).execute()
+            println(response)
             when (response.code()) {
                 200 -> response.body()?.toString()
-                else -> throw Error(response.message())
+                else -> throw Error(response.toString())
             }
         } catch (e: Error) {
-//            logger.error("Error when communicating with Bisnode: $e")
+            logger.error("Error when communicating with Bisnode: ${e.localizedMessage}")
             throw e
         }
     }

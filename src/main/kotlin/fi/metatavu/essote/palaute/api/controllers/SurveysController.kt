@@ -4,7 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import fi.metatavu.essote.palaute.api.bisnode.BisnodeService
 import fi.metatavu.model.Survey
 import fi.metatavu.model.SurveyQuestion
-import org.eclipse.microprofile.config.ConfigProvider
+import fi.metatavu.model.SurveyQuestionSummary
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.slf4j.Logger
 import java.io.File
@@ -20,8 +20,8 @@ class SurveysController {
     @Inject
     lateinit var bisnodeService: BisnodeService
 
-//    @Inject
-//    lateinit var logger: Logger
+    @Inject
+    lateinit var logger: Logger
 
     @ConfigProperty(name = "surveys.file")
     private lateinit var surveyFilePath: String
@@ -32,15 +32,10 @@ class SurveysController {
      * @return List of Surveys
      */
     fun listSurveys(): Array<Survey> {
-        try {
-            val surveyFile = File(surveyFilePath).inputStream().readBytes()
-            val surveys = jacksonObjectMapper().readValue(surveyFile.toString(Charsets.UTF_8), Array<Survey>::class.java)
-
-            surveyFile.inputStream().close()
-
-            return surveys
+        return try {
+            jacksonObjectMapper().readValue(readFromFile(surveyFilePath), Array<Survey>::class.java)
         } catch (e: Error) {
-//            logger.error("Error while opening file $surveyFilePath: ${e.localizedMessage}")
+            logger.error("Error while opening file $surveyFilePath: ${e.localizedMessage}")
             throw e
         }
     }
@@ -54,7 +49,36 @@ class SurveysController {
     fun listSurveyQuestions(surveyName: String): List<SurveyQuestion>? {
         val survey = listSurveys().find { it.name == surveyName }
             ?: return null
+
         return survey.questions
+    }
+
+    /**
+     * Finds a single survey question by survey name and question number
+     *
+     * @param surveyName survey name
+     * @param questionNumber survey question number
+     * @return SurveyQuestion or null
+     */
+    fun findSurveyQuestionBySurveyNameAndNumber(surveyName: String, questionNumber: Long): SurveyQuestion? {
+        val survey = listSurveyQuestions(surveyName)
+            ?: return null
+
+        return survey.find { it.number == questionNumber }
+    }
+
+    /**
+     * Finds survey question summary by survey name and question number
+     *
+     * @param surveyName survey name
+     * @param questionNumber survey question number
+     * @return SurveyQuestionSummary or null
+     */
+    fun findSurveyQuestionSummary(surveyName: String, questionNumber: Long): SurveyQuestionSummary {
+        return bisnodeService.getSurveyQuestionSummary(
+            surveyName = surveyName,
+            questionNumber = questionNumber
+        )
     }
 
     /**
@@ -65,5 +89,18 @@ class SurveysController {
      */
     fun findSurveyByName(surveyName: String): Survey? {
         return listSurveys().find { it.name == surveyName }
+    }
+
+    private fun readFromFile(filePath: String): String {
+        try {
+            val file = File(filePath).inputStream().readBytes()
+
+            file.inputStream().close()
+
+            return file.toString(Charsets.UTF_8)
+        } catch (e: Error) {
+                logger.error("Error while opening file $filePath: ${e.localizedMessage}")
+            throw e
+        }
     }
 }

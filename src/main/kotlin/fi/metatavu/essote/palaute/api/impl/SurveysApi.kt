@@ -21,13 +21,26 @@ class SurveysApi: SurveysApi, AbstractApi() {
                 ?: createNotFound("No survey found for $surveyName")
 
             createOk(survey)
-        } catch (e: Exception) {
+        } catch (e: Error) {
             createInternalServerError(e.localizedMessage)
         }
     }
 
     override suspend fun findSurveyQuestionSummary(surveyName: String, questionNumber: Long): Response {
-        TODO("Not yet implemented")
+        return try {
+            surveysController.findSurveyQuestionBySurveyNameAndNumber(
+                surveyName = surveyName,
+                questionNumber = questionNumber
+            )
+                ?: createNotFound("No survey for $surveyName or question for $questionNumber found")
+
+            createOk(surveysController.findSurveyQuestionSummary(
+                surveyName = surveyName,
+                questionNumber = questionNumber
+            ))
+        } catch (e: Error) {
+            createInternalServerError(e.localizedMessage)
+        }
     }
 
     override suspend fun listSurveyQuestions(surveyName: String): Response {
@@ -36,7 +49,7 @@ class SurveysApi: SurveysApi, AbstractApi() {
                 ?: createNotFound("No survey found for $surveyName")
 
             createOk(surveyQuestions)
-        } catch (e: Exception) {
+        } catch (e: Error) {
             createInternalServerError(e.localizedMessage)
         }
     }
