@@ -36,7 +36,6 @@ class BisnodeService {
      * @return Summary for provided survey question or null if not available
      */
     fun getSurveyQuestionSummary(surveyName: String, questionNumber: Long): SurveyQuestionSummary {
-        println(JwtUtils.createToken())
         return try {
             val path = "v$bisnodeApiVersion/yes-no/$surveyName/$questionNumber"
             val response = jacksonObjectMapper().readValue(doRequest(path), BisnodeSurveySummary::class.java)
