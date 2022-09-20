@@ -1,6 +1,7 @@
 package fi.metatavu.essote.palaute.api.bisnode
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import fi.metatavu.essote.palaute.api.bisnode.model.BisnodeSurveySummary
 import fi.metatavu.essote.palaute.api.utils.JwtUtils
 import fi.metatavu.model.Review
 import fi.metatavu.model.SurveyQuestionSummary
@@ -35,9 +36,16 @@ class BisnodeService {
      * @return Summary for provided survey question or null if not available
      */
     fun getSurveyQuestionSummary(surveyName: String, questionNumber: Long): SurveyQuestionSummary {
+        println(JwtUtils.createToken())
         return try {
             val path = "v$bisnodeApiVersion/yes-no/$surveyName/$questionNumber"
-            jacksonObjectMapper().readValue(doRequest(path), SurveyQuestionSummary::class.java)
+            val response = jacksonObjectMapper().readValue(doRequest(path), BisnodeSurveySummary::class.java)
+
+            SurveyQuestionSummary(
+                positive = response.yes,
+                negative = response.total?.minus(response.yes!!),
+                total = response.total
+            )
         } catch (e: Error) {
             throw Error(e.localizedMessage)
         }
@@ -72,9 +80,9 @@ class BisnodeService {
                 .addHeader("Authorization", "Bearer ${JwtUtils.createToken()}")
                 .build()
             val response = client.newCall(request).execute()
-            println(response)
+
             when (response.code()) {
-                200 -> response.body()?.toString()
+                200 -> response.body()?.string()
                 else -> throw Error(response.toString())
             }
         } catch (e: Error) {
