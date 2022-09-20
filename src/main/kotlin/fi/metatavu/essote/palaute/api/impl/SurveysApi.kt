@@ -1,14 +1,29 @@
 package fi.metatavu.essote.palaute.api.impl
 
+import fi.metatavu.essote.palaute.api.controllers.SurveysController
 import fi.metatavu.spec.SurveysApi
+import javax.enterprise.context.RequestScoped
+import javax.inject.Inject
 import javax.ws.rs.core.Response
 
 /**
  * API implementation for Surveys API
  */
+@RequestScoped
 class SurveysApi: SurveysApi, AbstractApi() {
+
+    @Inject
+    lateinit var surveysController: SurveysController
+
     override suspend fun findSurvey(surveyName: String): Response {
-        TODO("Not yet implemented")
+        return try {
+            val survey = surveysController.findSurveyByName(surveyName)
+                ?: createNotFound("No survey found for $surveyName")
+
+            createOk(survey)
+        } catch (e: Exception) {
+            createInternalServerError(e.localizedMessage)
+        }
     }
 
     override suspend fun findSurveyQuestionSummary(surveyName: String, questionNumber: Long): Response {
@@ -16,11 +31,22 @@ class SurveysApi: SurveysApi, AbstractApi() {
     }
 
     override suspend fun listSurveyQuestions(surveyName: String): Response {
-        TODO("Not yet implemented")
+        return try {
+            val surveyQuestions = surveysController.listSurveyQuestions(surveyName)
+                ?: createNotFound("No survey found for $surveyName")
+
+            createOk(surveyQuestions)
+        } catch (e: Exception) {
+            createInternalServerError(e.localizedMessage)
+        }
     }
 
     override suspend fun listSurveys(): Response {
-        TODO("Not yet implemented")
+        return try {
+            createOk(surveysController.listSurveys())
+        } catch (e: Error) {
+            createInternalServerError(e.localizedMessage)
+        }
     }
 
 }
