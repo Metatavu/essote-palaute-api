@@ -7,7 +7,7 @@
 #
 # Then, build the image with:
 #
-# docker build -f src/main/docker/Dockerfile.native -t quarkus/essote-palaute .
+# docker build -f src/main/docker/Dockerfile.native -t metatavu/essote-palaute .
 #
 # Then run the container using:
 #

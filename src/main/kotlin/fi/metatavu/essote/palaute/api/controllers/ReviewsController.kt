@@ -75,7 +75,7 @@ class ReviewsController {
             reviews = reviews.subList(0, maxResults)
         }
 
-        return reviews
+        return reviews.sortedBy { it.created }
     }
 
     /**
