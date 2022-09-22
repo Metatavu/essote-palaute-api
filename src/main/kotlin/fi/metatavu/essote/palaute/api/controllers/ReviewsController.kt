@@ -58,6 +58,7 @@ class ReviewsController {
         } else {
             val reviewProducts = reviewProductsController.listReviewProducts()
             reviewProducts.forEach { reviews.addAll(bisnodeService.listReviews(it.name!!, it.id!!)) }
+            reviews.sortBy { it.created }
         }
         if (maxRating != null) {
             reviews = reviews.filter { it.rating!! <= maxRating }.toMutableList()
@@ -75,7 +76,7 @@ class ReviewsController {
             reviews = reviews.subList(0, maxResults)
         }
 
-        return reviews.sortedBy { it.created }
+        return reviews
     }
 
     /**
