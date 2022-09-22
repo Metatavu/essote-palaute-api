@@ -36,7 +36,7 @@ class TestWiremockResource: QuarkusTestResourceLifecycleManager {
      */
     private fun yesNoStubs(wiremockServer: WireMockServer) {
         wiremockServer.stubFor(
-            get(urlPathEqualTo("/api/v$apiVersion/yes-no/emergency/1"))
+            get(urlPathEqualTo("/api/v$apiVersion/yes-no/testSurveyTwo/1"))
                 .willReturn(jsonResponse(objectMapper.writeValueAsString(BisnodeSurveySummary(
                     yes = 92,
                     total = 100

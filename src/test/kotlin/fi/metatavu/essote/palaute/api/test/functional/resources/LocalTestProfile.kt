@@ -10,7 +10,7 @@ class LocalTestProfile: QuarkusTestProfile {
     override fun getConfigOverrides(): Map<String, String> {
         return mapOf(
             "products.file" to "src/main/resources/products.json",
-            "surveys.file" to "src/main/resources/surveys.json"
+            "surveys.file" to "src/test/resources/surveys.json"
         )
     }
 }

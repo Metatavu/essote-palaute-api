@@ -24,9 +24,9 @@ class SurveysTest {
 
     @Test
     fun testFindSurvey() {
-        val expectedSurvey = FileHandler.getSurveys().find { it.name == "emergency" }
+        val expectedSurvey = FileHandler.getSurveys().find { it.name == "testSurveyOne" }
         val response = RestAssured.given()
-            .`when`().get("/v1/surveys/emergency")
+            .`when`().get("/v1/surveys/testSurveyOne")
             .then()
             .statusCode(200)
             .extract()
@@ -48,7 +48,7 @@ class SurveysTest {
     @Test
     fun testFindSurveyQuestionSummary() {
         val response = RestAssured.given()
-            .`when`().get("/v1/surveys/emergency/questions/1/summary")
+            .`when`().get("/v1/surveys/testSurveyTwo/questions/1/summary")
             .then()
             .statusCode(200)
             .extract()
@@ -74,16 +74,16 @@ class SurveysTest {
             .body(containsString("No survey for nonExistingSurvey or question for 1 found"))
 
         RestAssured.given()
-            .`when`().get("/v1/surveys/emergency/questions/4/summary")
+            .`when`().get("/v1/surveys/testSurveyOne/questions/4/summary")
             .then()
             .statusCode(404)
-            .body(containsString("No survey for emergency or question for 4 found"))
+            .body(containsString("No survey for testSurveyOne or question for 4 found"))
     }
 
     @Test
     fun testListSurveyQuestions() {
         val response = RestAssured.given()
-            .`when`().get("/v1/surveys/emergency/questions")
+            .`when`().get("/v1/surveys/testSurveyOne/questions")
             .then()
             .statusCode(200)
             .extract()
@@ -92,7 +92,7 @@ class SurveysTest {
 
         Assertions.assertEquals(
             response,
-            FileHandler.getSurveys().find { it.name == "emergency" }!!.questions
+            FileHandler.getSurveys().find { it.name == "testSurveyOne" }!!.questions
         )
     }
 

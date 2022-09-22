@@ -1,48 +1,48 @@
 [
   {
-    "name": "emergency",
+    "name": "testSurveyOne",
     "questions": [
       {
         "number": 1,
-        "question": "Saitko avun kokemaasi tarpeeseen, jonka takia saavuit päivystykseen?"
+        "question": "Test Survey Ones Question one"
       },
       {
         "number": 2,
-        "question": "Koetko saaneesi meiltä riittävät jatko-ohjeet käyntisi aikana?"
+        "question": "Test Survey Ones Question two"
       },
       {
         "number": 3,
-        "question": "Kerroimmeko sinulle sähköisestä asiointimahdollisuudesta, kanta.fi ja essote.fi?"
+        "question": "Test Survey Ones Question three?"
       }
     ]
   },
   {
-    "name": "reception",
+    "name": "testSurveyTwo",
     "questions": [
       {
         "number": 1,
-        "question": "Koitko palveluun hakeutumisen sujuvaksi?"
+        "question": "Test Survey Twos Question one"
       },
       {
         "number": 2,
-        "question": "Saitko mielestäsi viime käynnilläsi selkeät jatko-ohjeet sinua hoitaneilta henkilöltä?"
+        "question": "Test Survey Twos Question two"
       },
       {
         "number": 3,
-        "question": "Kerroimmeko sinulle sähköisestä asiointimahdollisuudesta, kanta.fi ja essote.fi?"
+        "question": "Test Survey Twos Question three"
       }
     ]
   },
   {
-    "name": "dentist",
+    "name": "testSurveyThree",
     "questions": [
       {
         "number": 1,
-        "question": "Koitko palveluun hakeutumisen sujuvaksi?"
+        "question": "Test Survey Thress Question one"
       },
       {
         "number": 2,
-        "question": "Saitko riittävästi tietoa sinulle annetusta hoidosta?"
+        "question": "Test Survey Thress Question two"
       }
     ]
   }

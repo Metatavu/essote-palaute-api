@@ -23,7 +23,7 @@ class ScheduledReviews {
     /**
      * Gets Reviews from Bisnode API on schedule
      */
-    @Scheduled(every = "30m", )
+    @Scheduled(every = "30m")
     fun scheduledReviews() {
         val startTime = OffsetDateTime.now()
         logger.info("Starting to cache reviews from Bisnode API at $startTime")
