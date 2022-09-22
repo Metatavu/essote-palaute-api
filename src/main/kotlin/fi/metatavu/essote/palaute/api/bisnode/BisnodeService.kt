@@ -35,7 +35,8 @@ class BisnodeService {
     /**
      * Gets survey question summary from Bisnode API
      *
-     * @param surveyQuestion survey question to get the summary for
+     * @param surveyName survey name
+     * @param questionNumber question number
      * @return Summary for provided survey question or null if not available
      */
     fun getSurveyQuestionSummary(surveyName: String, questionNumber: Int): SurveyQuestionSummary {
@@ -56,7 +57,8 @@ class BisnodeService {
     /**
      * Lists reviews from Bisnode API
      *
-     * @param reviewProductName review product name to find the reviews for
+     * @param reviewProductName review product name
+     * @param reviewProductId review product id
      * @return List of Reviews
      */
     @CacheResult(cacheName = "reviews-cache")
@@ -75,6 +77,7 @@ class BisnodeService {
      * Handles paginated HTTP responses
      *
      * @param reviewProductName review product name
+     * @param reviewProductId review product id
      * @return List of Reviews
      */
     private fun retrieveAllReviews(reviewProductName: String, reviewProductId: Int): List<Review> {
@@ -87,9 +90,10 @@ class BisnodeService {
             try {
                 val path = "v$bisnodeApiVersion/reviews/$reviewProductName?page=$pageNumber&size=$PAGE_SIZE"
                 val bisnodeResponse = doRequest(path)
-                if (pageNumber * PAGE_SIZE < bisnodeResponse.totalCount!!) {
-                    pageNumber++
-                } else {
+
+                pageNumber++
+
+                if (pageNumber * PAGE_SIZE > bisnodeResponse.totalCount!!) {
                     retrievedAllReviews = true
                 }
 
@@ -116,7 +120,7 @@ class BisnodeService {
     /**
      * Does HTTP GET-request to Bisnode API
      *
-     * @param path
+     * @param path path
      * @return Response string
      */
     private fun doRequest(path: String): BisnodeResponse {

@@ -22,9 +22,9 @@ class ReviewProductsTest {
 
     @Test
     fun testFindReviewProduct() {
-        val expectedReviewProduct = FileHandler.getReviewProducts().find{ it.name == "testProductOne" }
+        val expectedReviewProduct = FileHandler.getReviewProducts().find{ it.name == "testProductFive" }
         val response = RestAssured.given()
-            .`when`().get("/v1/reviewProducts/1")
+            .`when`().get("/v1/reviewProducts/5")
             .then()
             .statusCode(200)
             .extract()

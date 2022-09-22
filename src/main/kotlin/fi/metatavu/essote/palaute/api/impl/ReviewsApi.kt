@@ -15,16 +15,6 @@ class ReviewsApi: ReviewsApi, AbstractApi() {
 
     @Inject
     lateinit var reviewsController: ReviewsController
-    override fun findReview(reviewId: Int): Response {
-        return try {
-            val review = reviewsController.findReviewById(reviewId)
-                ?: return createNotFound("Review $reviewId not found")
-
-            createOk(review)
-        } catch (e: Error) {
-            createInternalServerError(e.localizedMessage)
-        }
-    }
 
     override fun listReviews(
         productId: Int?,

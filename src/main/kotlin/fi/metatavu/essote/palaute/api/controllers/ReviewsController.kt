@@ -28,16 +28,6 @@ class ReviewsController {
     private val DELAY = 10000L
 
     /**
-     * Finds review by id
-     *
-     * @param reviewId Long
-     * @return Review or null
-     */
-    fun findReviewById(reviewId: Int): Review? {
-        return null
-    }
-
-    /**
      * Lists reviews
      *
      * @param productId productId
@@ -60,9 +50,11 @@ class ReviewsController {
     ): List<Review>? {
         var reviews = mutableListOf<Review>()
         if (productId != null) {
-            reviews.addAll(listReviewsByReviewProduct(
+            val reviewsOfProduct = listReviewsByReviewProduct(
                 reviewProductId = productId
-            )!!)
+            ) ?: return null
+
+            reviews.addAll(reviewsOfProduct)
         } else {
             val reviewProducts = reviewProductsController.listReviewProducts()
             reviewProducts.forEach { reviews.addAll(bisnodeService.listReviews(it.name!!, it.id!!)) }
@@ -89,7 +81,7 @@ class ReviewsController {
     /**
      * Gets reviews for single review product
      *
-     * @param reviewProduct review product
+     * @param reviewProductId review product id
      * @return List of Reviews or null
      */
     private fun listReviewsByReviewProduct(reviewProductId: Int): List<Review>? {

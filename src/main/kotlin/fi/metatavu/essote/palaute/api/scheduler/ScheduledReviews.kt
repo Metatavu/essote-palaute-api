@@ -1,8 +1,8 @@
 package fi.metatavu.essote.palaute.api.scheduler
 
 import fi.metatavu.essote.palaute.api.controllers.ReviewsController
-import io.quarkus.runtime.LaunchMode
 import io.quarkus.scheduler.Scheduled
+import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.slf4j.Logger
 import java.time.Duration
 import java.time.OffsetDateTime
@@ -21,12 +21,15 @@ class ScheduledReviews {
     @Inject
     lateinit var logger: Logger
 
+    @ConfigProperty(name = "scheduled.enabled")
+    var scheduledEnabled = false
+
     /**
      * Gets Reviews from Bisnode API on schedule
      */
     @Scheduled(every = "30m")
     fun scheduledReviews() {
-        if (LaunchMode.current() == LaunchMode.TEST) {
+        if (!scheduledEnabled) {
             return
         }
 

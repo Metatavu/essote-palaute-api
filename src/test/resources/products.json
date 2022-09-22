@@ -1,26 +1,14 @@
 [
   {
-    "id": 1,
-    "name": "testProductOne",
-    "displayName": "Testi 1",
-    "link": "https://www.example.com/pathParamOne/pathParamTwo/"
-  },
-  {
-    "id": 2,
-    "name": "testProductTwo",
-    "displayName": "Testi 2",
-    "link": "https://www.example.com/pathParamThree/pathParamFour/"
-  },
-  {
-    "id": 3,
-    "name": "testProductThree",
-    "displayName": "Testi 3",
-    "link": "https://www.example.com/pathParamOne/pathParamTwo/"
-  },
-  {
     "id": 4,
     "name": "testProductFour",
     "displayName": "Testi 4",
     "link": "https://www.example.com/pathParamOne/pathParamTwo/"
+  },
+  {
+    "id": 5,
+    "name": "testProductFive",
+    "displayName": "Testi 5",
+    "link": "https://www.example.com/pathParamOne/pathParamTwo"
   }
 ]
