@@ -1,6 +1,7 @@
 package fi.metatavu.essote.palaute.api.scheduler
 
 import fi.metatavu.essote.palaute.api.controllers.ReviewsController
+import io.quarkus.runtime.LaunchMode
 import io.quarkus.scheduler.Scheduled
 import org.slf4j.Logger
 import java.time.Duration
@@ -25,6 +26,10 @@ class ScheduledReviews {
      */
     @Scheduled(every = "30m")
     fun scheduledReviews() {
+        if (LaunchMode.current() == LaunchMode.TEST) {
+            return
+        }
+
         val startTime = OffsetDateTime.now()
         logger.info("Starting to cache reviews from Bisnode API at $startTime")
         reviewsController.cacheReviews()
