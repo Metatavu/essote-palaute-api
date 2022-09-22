@@ -1,26 +1,54 @@
 package fi.metatavu.essote.palaute.api.impl
 
+import fi.metatavu.essote.palaute.api.controllers.ReviewsController
 import fi.metatavu.model.ReviewListSort
 import fi.metatavu.spec.ReviewsApi
+import javax.enterprise.context.RequestScoped
+import javax.inject.Inject
 import javax.ws.rs.core.Response
 
 /**
  * API implementation for Reviews API
  */
+@RequestScoped
 class ReviewsApi: ReviewsApi, AbstractApi() {
-    override suspend fun findReview(reviewId: Long): Response {
-        TODO("Not yet implemented")
+
+    @Inject
+    lateinit var reviewsController: ReviewsController
+    override fun findReview(reviewId: Int): Response {
+        return try {
+            val review = reviewsController.findReviewById(reviewId)
+                ?: return createNotFound("Review $reviewId not found")
+
+            createOk(review)
+        } catch (e: Error) {
+            createInternalServerError(e.localizedMessage)
+        }
     }
 
-    override suspend fun listReviews(
-        productId: Long?,
+    override fun listReviews(
+        productId: Int?,
         minRating: Int?,
         maxRating: Int?,
         minReviewLength: Int?,
-        firstResult: Long?,
-        maxResults: Long?,
+        firstResult: Int?,
+        maxResults: Int?,
         sort: ReviewListSort?
     ): Response {
-        TODO("Not yet implemented")
+        return try {
+            val reviews = reviewsController.listReviews(
+                productId = productId,
+                minRating = minRating,
+                maxRating = maxRating,
+                minReviewLength = minReviewLength,
+                firstResult = firstResult,
+                maxResults = maxResults,
+                sort = sort
+            ) ?: return createNotFound("No reviews found")
+
+            createOk(reviews)
+        } catch (e: Error) {
+            createInternalServerError(e.localizedMessage)
+        }
     }
 }

@@ -1,13 +1,11 @@
 package fi.metatavu.essote.palaute.api.test.functional.tests
 
-import fi.metatavu.essote.palaute.api.impl.SurveysApi
 import fi.metatavu.essote.palaute.api.test.functional.data.FileHandler
 import fi.metatavu.essote.palaute.api.test.functional.resources.TestWiremockResource
 import fi.metatavu.model.Survey
 import fi.metatavu.model.SurveyQuestion
 import fi.metatavu.model.SurveyQuestionSummary
 import io.quarkus.test.common.QuarkusTestResource
-import io.quarkus.test.common.http.TestHTTPEndpoint
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured
 import org.hamcrest.CoreMatchers.*
@@ -19,7 +17,6 @@ import org.junit.jupiter.api.Test
  */
 @QuarkusTest
 @QuarkusTestResource(TestWiremockResource::class)
-@TestHTTPEndpoint(SurveysApi::class)
 class SurveysTest {
 
     @Test

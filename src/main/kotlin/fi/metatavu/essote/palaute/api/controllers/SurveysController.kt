@@ -2,12 +2,12 @@ package fi.metatavu.essote.palaute.api.controllers
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import fi.metatavu.essote.palaute.api.bisnode.BisnodeService
+import fi.metatavu.essote.palaute.api.utils.FileUtils
 import fi.metatavu.model.Survey
 import fi.metatavu.model.SurveyQuestion
 import fi.metatavu.model.SurveyQuestionSummary
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.slf4j.Logger
-import java.io.File
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
@@ -19,6 +19,9 @@ class SurveysController {
 
     @Inject
     lateinit var bisnodeService: BisnodeService
+
+    @Inject
+    lateinit var fileUtils: FileUtils
 
     @Inject
     lateinit var logger: Logger
@@ -33,7 +36,7 @@ class SurveysController {
      */
     fun listSurveys(): Array<Survey> {
         return try {
-            jacksonObjectMapper().readValue(readFromFile(surveyFilePath), Array<Survey>::class.java)
+            jacksonObjectMapper().readValue(fileUtils.readFromFile(surveyFilePath), Array<Survey>::class.java)
         } catch (e: Error) {
             logger.error("Error while opening file $surveyFilePath: ${e.localizedMessage}")
             throw e
@@ -60,7 +63,7 @@ class SurveysController {
      * @param questionNumber survey question number
      * @return SurveyQuestion or null
      */
-    fun findSurveyQuestionBySurveyNameAndNumber(surveyName: String, questionNumber: Long): SurveyQuestion? {
+    fun findSurveyQuestionBySurveyNameAndNumber(surveyName: String, questionNumber: Int): SurveyQuestion? {
         val surveyQuestions = listSurveyQuestions(surveyName)
             ?: return null
 
@@ -74,7 +77,7 @@ class SurveysController {
      * @param questionNumber survey question number
      * @return SurveyQuestionSummary or null
      */
-    fun findSurveyQuestionSummary(surveyName: String, questionNumber: Long): SurveyQuestionSummary {
+    fun findSurveyQuestionSummary(surveyName: String, questionNumber: Int): SurveyQuestionSummary {
         return bisnodeService.getSurveyQuestionSummary(
             surveyName = surveyName,
             questionNumber = questionNumber
@@ -89,18 +92,5 @@ class SurveysController {
      */
     fun findSurveyByName(surveyName: String): Survey? {
         return listSurveys().find { it.name == surveyName }
-    }
-
-    private fun readFromFile(filePath: String): String {
-        try {
-            val file = File(filePath).inputStream().readBytes()
-
-            file.inputStream().close()
-
-            return file.toString(Charsets.UTF_8)
-        } catch (e: Error) {
-            logger.error("Error while opening file $filePath: ${e.localizedMessage}")
-            throw e
-        }
     }
 }

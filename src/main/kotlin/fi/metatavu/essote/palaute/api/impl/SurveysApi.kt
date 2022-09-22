@@ -15,7 +15,7 @@ class SurveysApi: SurveysApi, AbstractApi() {
     @Inject
     lateinit var surveysController: SurveysController
 
-    override suspend fun findSurvey(surveyName: String): Response {
+    override fun findSurvey(surveyName: String): Response {
         return try {
             val survey = surveysController.findSurveyByName(surveyName)
                 ?: return createNotFound("No survey found for $surveyName")
@@ -26,7 +26,7 @@ class SurveysApi: SurveysApi, AbstractApi() {
         }
     }
 
-    override suspend fun findSurveyQuestionSummary(surveyName: String, questionNumber: Long): Response {
+    override fun findSurveyQuestionSummary(surveyName: String, questionNumber: Int): Response {
         return try {
             surveysController.findSurveyQuestionBySurveyNameAndNumber(
                 surveyName = surveyName,
@@ -43,7 +43,7 @@ class SurveysApi: SurveysApi, AbstractApi() {
         }
     }
 
-    override suspend fun listSurveyQuestions(surveyName: String): Response {
+    override fun listSurveyQuestions(surveyName: String): Response {
         return try {
             val surveyQuestions = surveysController.listSurveyQuestions(surveyName)
                 ?: return createNotFound("No survey found for $surveyName")
@@ -54,7 +54,7 @@ class SurveysApi: SurveysApi, AbstractApi() {
         }
     }
 
-    override suspend fun listSurveys(): Response {
+    override fun listSurveys(): Response {
         return try {
             createOk(surveysController.listSurveys())
         } catch (e: Error) {

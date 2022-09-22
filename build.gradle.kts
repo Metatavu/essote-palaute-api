@@ -30,6 +30,9 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.auth0:java-jwt:$javaJwtVersion")
     implementation("org.apache.commons:commons-text:$commonsTextVersion")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+    implementation("io.quarkus:quarkus-cache")
+    implementation("io.quarkus:quarkus-scheduler")
 
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
@@ -75,7 +78,7 @@ val generateApiSpec = tasks.register("generateApiSpec", GenerateTask::class) {
     this.configOptions.put("library", "jaxrs-spec")
     this.configOptions.put("dateLibrary", "java8")
     this.configOptions.put("interfaceOnly", "true")
-    this.configOptions.put("useCoroutines", "true")
+    this.configOptions.put("useCoroutines", "false")
     this.configOptions.put("enumPropertyNaming", "UPPERCASE")
     this.configOptions.put("returnResponse", "true")
     this.configOptions.put("useSwaggerAnnotations", "false")

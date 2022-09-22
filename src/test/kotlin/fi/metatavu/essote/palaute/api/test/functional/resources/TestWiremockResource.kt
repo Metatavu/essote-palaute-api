@@ -37,7 +37,7 @@ class TestWiremockResource: QuarkusTestResourceLifecycleManager {
     private fun yesNoStubs(wiremockServer: WireMockServer) {
         wiremockServer.stubFor(
             get(urlPathEqualTo("/api/v$apiVersion/yes-no/emergency/1"))
-                .willReturn(jsonResponse(objectMapper.writeValueAsString(createBisnodeSurveySummary(
+                .willReturn(jsonResponse(objectMapper.writeValueAsString(BisnodeSurveySummary(
                     yes = 92,
                     total = 100
                 )), 200))
@@ -46,20 +46,5 @@ class TestWiremockResource: QuarkusTestResourceLifecycleManager {
 
     override fun stop() {
         wiremockServer.stop()
-    }
-
-    /**
-     * Creates BisnodeSurveySummary with given values
-     *
-     * @param yes yes
-     * @param total total
-     * @return BisnodeSurveySummary
-     */
-    private fun createBisnodeSurveySummary(yes: Long, total: Long): BisnodeSurveySummary {
-        val newBisnodeSurveySummary = BisnodeSurveySummary()
-        newBisnodeSurveySummary.yes = yes
-        newBisnodeSurveySummary.total = total
-
-        return newBisnodeSurveySummary
     }
 }

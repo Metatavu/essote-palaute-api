@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "totality",
+    "displayName": "Kokonaisuus",
+    "link": "https://www.essote.fi/asiakkaalle/palvelut/"
+  },
+  {
+    "id": 2,
+    "name": "emergency",
+    "displayName": "Päivystys",
+    "link": "https://www.essote.fi/asiakkaalle/palvelut/paivystys/"
+  },
+  {
+    "id": 3,
+    "name": "reception",
+    "displayName": "Vastaanottopalvelut",
+    "link": "https://www.essote.fi/asiakkaalle/palvelut/"
+  },
+  {
+    "id": 4,
+    "name": "dentist",
+    "displayName": "Hammashoito",
+    "link": "https://www.essote.fi/asiakkaalle/palvelut/hammaslaakaripaivystys-ja-hammashoitolat/"
+  }
+]
