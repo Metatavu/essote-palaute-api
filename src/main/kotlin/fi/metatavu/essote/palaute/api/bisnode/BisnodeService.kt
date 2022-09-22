@@ -1,5 +1,6 @@
 package fi.metatavu.essote.palaute.api.bisnode
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import fi.metatavu.essote.palaute.api.bisnode.model.BisnodeResponse
 import fi.metatavu.essote.palaute.api.bisnode.model.BisnodeReview
@@ -31,6 +32,10 @@ class BisnodeService {
     lateinit var bisnodeApiVersion: String
 
     private val objectMapper = jacksonObjectMapper().findAndRegisterModules()
+
+    init {
+        objectMapper.registerModule(JavaTimeModule())
+    }
 
     /**
      * Gets survey question summary from Bisnode API
