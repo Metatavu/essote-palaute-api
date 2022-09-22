@@ -65,7 +65,7 @@ allOpen {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
     kotlinOptions.javaParameters = true
-    dependsOn("generateApiSpec", "generateApiClient")
+    dependsOn("generateApiSpec")
 }
 
 val generateApiSpec = tasks.register("generateApiSpec", GenerateTask::class) {
@@ -75,6 +75,7 @@ val generateApiSpec = tasks.register("generateApiSpec", GenerateTask::class) {
     setProperty("apiPackage", "${project.group}.spec")
     setProperty("invokerPackage", "${project.group}.invoker")
     setProperty("modelPackage", "${project.group}.model")
+    setProperty("templateDir", "$rootDir/openapi/api-spec")
 
     this.configOptions.put("library", "jaxrs-spec")
     this.configOptions.put("dateLibrary", "java8")
@@ -86,22 +87,6 @@ val generateApiSpec = tasks.register("generateApiSpec", GenerateTask::class) {
     this.configOptions.put("additionalModelTypeAnnotations", "@io.quarkus.runtime.annotations.RegisterForReflection")
 }
 
-val generateApiClient = tasks.register("generateApiClient", GenerateTask::class) {
-    setProperty("generatorName", "kotlin")
-    setProperty("library", "jvm-okhttp3")
-    setProperty("inputSpec", "$rootDir/essote-palaute-api-spec/swagger.yaml")
-    setProperty("outputDir", "$buildDir/generated/api-client")
-    setProperty("packageName", "${project.group}.test.client")
-    this.configOptions.put("dateLibrary", "string")
-    this.configOptions.put("collectionType", "array")
-    this.configOptions.put("serializationLibrary", "jackson")
-    this.configOptions.put("enumPropertyNaming", "UPPERCASE")
-}
-
 tasks.named("compileKotlin") {
     dependsOn(generateApiSpec)
-}
-
-tasks.named("compileTestKotlin") {
-    dependsOn(generateApiClient)
 }
