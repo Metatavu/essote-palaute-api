@@ -2,6 +2,7 @@ package fi.metatavu.essote.palaute.api.bisnode
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import fi.metatavu.essote.palaute.api.bisnode.model.BisnodeResponse
+import fi.metatavu.essote.palaute.api.bisnode.model.BisnodeReview
 import fi.metatavu.essote.palaute.api.bisnode.model.BisnodeSurveySummary
 import fi.metatavu.essote.palaute.api.utils.JwtUtils
 import fi.metatavu.model.Review
@@ -59,10 +60,11 @@ class BisnodeService {
      * @return List of Reviews
      */
     @CacheResult(cacheName = "reviews-cache")
-    fun listReviews(reviewProductName: String): List<Review> {
+    fun listReviews(reviewProductName: String, reviewProductId: Int): List<Review> {
         return try {
             retrieveAllReviews(
-                reviewProductName = reviewProductName
+                reviewProductName = reviewProductName,
+                reviewProductId = reviewProductId
             )
         } catch (e: Error) {
             throw e
@@ -75,7 +77,7 @@ class BisnodeService {
      * @param reviewProductName review product name
      * @return List of Reviews
      */
-    private fun retrieveAllReviews(reviewProductName: String): List<Review> {
+    private fun retrieveAllReviews(reviewProductName: String, reviewProductId: Int): List<Review> {
         var retrievedAllReviews = false
         val reviews = mutableListOf<Review>()
         var pagesRetrieved = 0
@@ -93,7 +95,14 @@ class BisnodeService {
 
                 pagesRetrieved++
                 reviews.addAll(
-                    objectMapper.readValue(bisnodeResponse.content, Array<Review>::class.java).toMutableList()
+                    objectMapper.readValue(bisnodeResponse.content, Array<BisnodeReview>::class.java).toMutableList().map { bisnodeReview ->
+                        Review(
+                            id = bisnodeReview.id,
+                            productId = reviewProductId,
+                            rating = bisnodeReview.rating,
+                            created = bisnodeReview.created
+                        )
+                    }
                 )
             } catch (e: Error) {
                 logger.error("Error while retrieving reviews for product: $reviewProductName, ${e.localizedMessage}")

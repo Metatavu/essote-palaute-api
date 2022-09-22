@@ -61,40 +61,29 @@ class ReviewsController {
         var reviews = mutableListOf<Review>()
         if (productId != null) {
             reviews.addAll(listReviewsByReviewProduct(
-                reviewProductId = productId,
-                firstResult = firstResult ?: 1,
-                maxResults = maxResults ?: BisnodeService.PAGE_SIZE
+                reviewProductId = productId
             )!!)
-
-            if (maxRating != null) {
-                reviews = reviews.filter { it.rating!! <= maxRating }.toMutableList()
-            }
-            if (minRating != null) {
-                reviews = reviews.filter { it.rating!! >= minRating }.toMutableList()
-            }
-            if (sort == ReviewListSort.ASC) {
-                reviews.reverse()
-            }
-
-            return reviews
+        } else {
+            val reviewProducts = reviewProductsController.listReviewProducts()
+            reviewProducts.forEach { reviews.addAll(bisnodeService.listReviews(it.name!!, it.id!!)) }
         }
-//        val reviewProduct = reviewProductsController.findReviewProductById(
-//            reviewProductId = 2
-//        )
-//        val reviews = bisnodeService.listReviews(
-//            reviewProductName = reviewProduct!!.name!!,
-//            page = 0L,
-//            pagesToRetrieve = maxResults / BisnodeService.PAGE_SIZE
-//        )
+        if (maxRating != null) {
+            reviews = reviews.filter { it.rating!! <= maxRating }.toMutableList()
+        }
+        if (minRating != null) {
+            reviews = reviews.filter { it.rating!! >= minRating }.toMutableList()
+        }
+        if (sort == ReviewListSort.ASC) {
+            reviews.reverse()
+        }
+        if (firstResult != null) {
+            reviews = reviews.subList(firstResult, reviews.size)
+        }
+        if (maxResults != null) {
+            reviews = reviews.subList(0, maxResults)
+        }
 
-//        println("Reviews length: ${reviews.size}")
-
-//        if (minReviewLength != null) {
-//            reviews.forEach { println(it.review?.length) }
-//            reviews = reviews.filter { it.review != null && it.review.length > minReviewLength }
-//        }
-
-        return null
+        return reviews
     }
 
     /**
@@ -103,12 +92,13 @@ class ReviewsController {
      * @param reviewProduct review product
      * @return List of Reviews or null
      */
-    private fun listReviewsByReviewProduct(reviewProductId: Int, firstResult: Int, maxResults: Int): List<Review>? {
+    private fun listReviewsByReviewProduct(reviewProductId: Int): List<Review>? {
         val reviewProduct = reviewProductsController.findReviewProductById(reviewProductId)
             ?: return null
 
         return bisnodeService.listReviews(
-            reviewProductName = reviewProduct.name!!
+            reviewProductName = reviewProduct.name!!,
+            reviewProductId = reviewProduct.id!!
         ).filter { it.productId == reviewProductId }
     }
 
@@ -119,7 +109,8 @@ class ReviewsController {
         reviewProductsController.listReviewProducts().forEach { reviewProduct ->
             logger.info("Getting reviews for ${reviewProduct.name}")
             bisnodeService.listReviews(
-                reviewProductName = reviewProduct.name!!
+                reviewProductName = reviewProduct.name!!,
+                reviewProductId = reviewProduct.id!!
             )
             logger.info("Waiting ${DELAY}ms before next requests")
             Thread.sleep(DELAY)
