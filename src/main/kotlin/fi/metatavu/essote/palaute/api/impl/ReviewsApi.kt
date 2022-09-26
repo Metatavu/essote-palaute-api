@@ -36,7 +36,21 @@ class ReviewsApi: ReviewsApi, AbstractApi() {
                 sort = sort
             ) ?: return createNotFound("No reviews found")
 
-            createOk(reviews)
+            val totalReviews = reviewsController.listReviews(
+                productId = null,
+                minRating = null,
+                maxRating = null,
+                minReviewLength = null,
+                firstResult = null,
+                maxResults = null,
+                sort = null
+            )
+
+            createOk(
+                entity = reviews,
+                totalHits = reviews.size,
+                totalUnfilteredHits = totalReviews!!.size
+            )
         } catch (e: Error) {
             createInternalServerError(e.localizedMessage)
         }

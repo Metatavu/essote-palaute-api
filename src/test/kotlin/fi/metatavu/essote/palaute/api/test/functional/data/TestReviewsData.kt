@@ -40,40 +40,40 @@ class TestReviewsData {
                     created = OffsetDateTime.now()
                 ),
                 BisnodeReview(
-                    id =  4,
-                    rating = 5,
-                    created = OffsetDateTime.now()
-                ),
-                BisnodeReview(
                     id =  5,
-                    rating = 0,
+                    rating = 5,
                     created = OffsetDateTime.now()
                 ),
                 BisnodeReview(
                     id =  6,
-                    rating = 1,
+                    rating = 0,
                     created = OffsetDateTime.now()
                 ),
                 BisnodeReview(
                     id =  7,
-                    rating = 2,
+                    rating = 1,
                     created = OffsetDateTime.now()
                 ),
                 BisnodeReview(
                     id =  8,
-                    rating = 3,
+                    rating = 2,
                     created = OffsetDateTime.now()
                 ),
                 BisnodeReview(
                     id =  9,
-                    rating = 4,
+                    rating = 3,
                     created = OffsetDateTime.now()
                 ),
                 BisnodeReview(
                     id =  10,
-                    rating = 5,
+                    rating = 4,
                     created = OffsetDateTime.now()
                 ),
+                BisnodeReview(
+                    id =  11,
+                    rating = 5,
+                    created = OffsetDateTime.now()
+                )
             )
         }
 
@@ -110,40 +110,40 @@ class TestReviewsData {
                     created = OffsetDateTime.now()
                 ),
                 BisnodeReview(
-                    id =  4,
-                    rating = 5,
-                    created = OffsetDateTime.now()
-                ),
-                BisnodeReview(
                     id =  5,
-                    rating = 0,
+                    rating = 5,
                     created = OffsetDateTime.now()
                 ),
                 BisnodeReview(
                     id =  6,
-                    rating = 1,
+                    rating = 0,
                     created = OffsetDateTime.now()
                 ),
                 BisnodeReview(
                     id =  7,
-                    rating = 2,
+                    rating = 1,
                     created = OffsetDateTime.now()
                 ),
                 BisnodeReview(
                     id =  8,
-                    rating = 3,
+                    rating = 2,
                     created = OffsetDateTime.now()
                 ),
                 BisnodeReview(
                     id =  9,
-                    rating = 4,
+                    rating = 3,
                     created = OffsetDateTime.now()
                 ),
                 BisnodeReview(
                     id =  10,
-                    rating = 5,
+                    rating = 4,
                     created = OffsetDateTime.now()
                 ),
+                BisnodeReview(
+                    id =  11,
+                    rating = 5,
+                    created = OffsetDateTime.now()
+                )
             )
         }
     }

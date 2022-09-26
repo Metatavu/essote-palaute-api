@@ -124,6 +124,30 @@ class ReviewsTest {
     }
 
     @Test
+    fun testResponseHeaders() {
+        RestAssured.given()
+            .`when`().get("/v1/reviews")
+            .then()
+            .statusCode(200)
+            .header("total-hits", "24")
+            .header("total-unfiltered-hits", "24")
+
+        RestAssured.given()
+            .`when`().get("/v1/reviews?productId=4")
+            .then()
+            .statusCode(200)
+            .header("total-hits", "12")
+            .header("total-unfiltered-hits", "24")
+
+        RestAssured.given()
+            .`when`().get("/v1/reviews?maxResults=2")
+            .then()
+            .statusCode(200)
+            .header("total-hits", "2")
+            .header("total-unfiltered-hits", "24")
+    }
+
+    @Test
     fun testListReviewsNotFound() {
         RestAssured.given()
             .`when`().get("/v1/reviews?productId=0")

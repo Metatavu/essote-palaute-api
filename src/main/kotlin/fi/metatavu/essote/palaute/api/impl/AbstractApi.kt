@@ -22,12 +22,23 @@ abstract class AbstractApi {
 
     /**
      * Constructs OK (200) response
+     * with total-hits and total-unfiltered-hits headers
      *
+     * @param entity entity payload
+     * @param totalHits total-hits header value
+     * @param totalUnfilteredHits total-unfiltered-hits header value
      * @return response
      */
-    protected fun createOk(): Response {
+    protected fun createOk(
+        entity: Any,
+        totalHits: Int,
+        totalUnfilteredHits: Int
+    ): Response {
         return Response
             .status(Response.Status.OK)
+            .entity(entity)
+            .header("total-hits", totalHits)
+            .header("total-unfiltered-hits", totalUnfilteredHits)
             .build()
     }
 

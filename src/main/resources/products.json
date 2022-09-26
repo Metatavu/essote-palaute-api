@@ -1,11 +1,5 @@
 [
   {
-    "id": 1,
-    "name": "totality",
-    "displayName": "Kokonaisuus",
-    "link": "https://www.essote.fi/asiakkaalle/palvelut/"
-  },
-  {
     "id": 2,
     "name": "emergency",
     "displayName": "Päivystys",
