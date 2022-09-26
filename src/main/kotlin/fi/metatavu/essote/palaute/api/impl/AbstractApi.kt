@@ -43,53 +43,6 @@ abstract class AbstractApi {
     }
 
     /**
-     * Constructs created (201) response
-     *
-     * @param entity created entity
-     * @return response
-     */
-    protected fun createCreated(entity: Any): Response {
-        return Response
-            .status(Response.Status.CREATED)
-            .entity(entity)
-            .build()
-    }
-
-    /**
-     * Constructs accepted (202) response
-     *
-     * @param entity payload
-     * @return response
-     */
-    protected fun createAccepted(entity: Any?): Response {
-        return Response
-            .status(Response.Status.ACCEPTED)
-            .entity(entity)
-            .build()
-    }
-
-    /**
-     * Constructs no content (204) response
-     *
-     * @return response
-     */
-    protected fun createNoContent(): Response {
-        return Response
-            .status(Response.Status.NO_CONTENT)
-            .build()
-    }
-
-    /**
-     * Constructs bad request (400) response
-     *
-     * @param message message
-     * @return response
-     */
-    protected fun createBadRequest(message: String): Response {
-        return createError(Response.Status.BAD_REQUEST, message)
-    }
-
-    /**
      * Constructs not found (404) response
      *
      * @param message message
@@ -100,26 +53,6 @@ abstract class AbstractApi {
     }
 
     /**
-     * Constructs conflict (409) response
-     *
-     * @param message message
-     * @return response
-     */
-    protected fun createConflict(message: String): Response {
-        return createError(Response.Status.CONFLICT, message)
-    }
-
-    /**
-     * Constructs not implemented (501) response
-     *
-     * @param message message
-     * @return response
-     */
-    protected fun createNotImplemented(message: String): Response {
-        return createError(Response.Status.NOT_IMPLEMENTED, message)
-    }
-
-    /**
      * Constructs internal server error (500) response
      *
      * @param message message
@@ -127,26 +60,6 @@ abstract class AbstractApi {
      */
     protected fun createInternalServerError(message: String): Response {
         return createError(Response.Status.INTERNAL_SERVER_ERROR, message)
-    }
-
-    /**
-     * Constructs forbidden (403) response
-     *
-     * @param message message
-     * @return response
-     */
-    protected fun createForbidden(message: String): Response {
-        return createError(Response.Status.FORBIDDEN, message)
-    }
-
-    /**
-     * Constructs unauthorized (401) response
-     *
-     * @param message message
-     * @return response
-     */
-    protected fun createUnauthorized(message: String): Response {
-        return createError(Response.Status.UNAUTHORIZED, message)
     }
 
     /**
