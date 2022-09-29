@@ -21,6 +21,7 @@ class ScheduledReviews {
     @Inject
     lateinit var logger: Logger
 
+    @Inject
     @ConfigProperty(name = "scheduled.enabled")
     var scheduledEnabled = false
 

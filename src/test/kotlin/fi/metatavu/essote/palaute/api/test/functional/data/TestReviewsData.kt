@@ -3,6 +3,9 @@ package fi.metatavu.essote.palaute.api.test.functional.data
 import fi.metatavu.essote.palaute.api.bisnode.model.BisnodeReview
 import java.time.OffsetDateTime
 
+/**
+ * Class for test reviews mock data
+ */
 class TestReviewsData {
 
     companion object {

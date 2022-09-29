@@ -25,7 +25,7 @@ class ReviewsController {
     /**
      * Amount of delay between review products while performing scheduled action (in ms)
      */
-    private val DELAY = 10000L
+    private val DELAY_BETWEEN_REVIEW_PRODUCTS = 10000L
 
     /**
      * Lists reviews
@@ -80,6 +80,21 @@ class ReviewsController {
     }
 
     /**
+     * Gets review products from file, gets all reviews for them and caches them
+     */
+    fun cacheReviews() {
+        reviewProductsController.listReviewProducts().forEach { reviewProduct ->
+            logger.info("Getting reviews for ${reviewProduct.name}")
+            bisnodeService.listReviews(
+                reviewProductName = reviewProduct.name!!,
+                reviewProductId = reviewProduct.id!!
+            )
+            logger.info("Waiting ${DELAY_BETWEEN_REVIEW_PRODUCTS}ms before next requests")
+            Thread.sleep(DELAY_BETWEEN_REVIEW_PRODUCTS)
+        }
+    }
+
+    /**
      * Gets reviews for single review product
      *
      * @param reviewProductId review product id
@@ -93,20 +108,5 @@ class ReviewsController {
             reviewProductName = reviewProduct.name!!,
             reviewProductId = reviewProduct.id!!
         ).filter { it.productId == reviewProductId }
-    }
-
-    /**
-     * Gets review products from file, gets all reviews for them and caches them
-     */
-    fun cacheReviews() {
-        reviewProductsController.listReviewProducts().forEach { reviewProduct ->
-            logger.info("Getting reviews for ${reviewProduct.name}")
-            bisnodeService.listReviews(
-                reviewProductName = reviewProduct.name!!,
-                reviewProductId = reviewProduct.id!!
-            )
-            logger.info("Waiting ${DELAY}ms before next requests")
-            Thread.sleep(DELAY)
-        }
     }
 }

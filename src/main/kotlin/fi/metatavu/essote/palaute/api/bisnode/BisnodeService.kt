@@ -1,7 +1,9 @@
 package fi.metatavu.essote.palaute.api.bisnode
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import fi.metatavu.essote.palaute.api.bisnode.model.BisnodeResponse
 import fi.metatavu.essote.palaute.api.bisnode.model.BisnodeReview
 import fi.metatavu.essote.palaute.api.bisnode.model.BisnodeSurveySummary
@@ -13,13 +15,13 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.slf4j.Logger
-import javax.enterprise.context.RequestScoped
+import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
 /**
  * Service for accessing Bisnode API
  */
-@RequestScoped
+@ApplicationScoped
 class BisnodeService {
 
     @Inject
@@ -28,14 +30,16 @@ class BisnodeService {
     @ConfigProperty(name = "bisnode.base.url")
     lateinit var bisnodeBaseUrl: String
 
+    @Inject
     @ConfigProperty(name = "bisnode.api.version")
     lateinit var bisnodeApiVersion: String
 
-    private val objectMapper = jacksonObjectMapper().findAndRegisterModules()
-
-    init {
-        objectMapper.registerModule(JavaTimeModule())
-    }
+    private val objectMapper: ObjectMapper
+        get() {
+            return jacksonObjectMapper()
+                .findAndRegisterModules()
+                .registerModule(JavaTimeModule())
+        }
 
     /**
      * Gets survey question summary from Bisnode API
@@ -45,18 +49,14 @@ class BisnodeService {
      * @return Summary for provided survey question or null if not available
      */
     fun getSurveyQuestionSummary(surveyName: String, questionNumber: Int): SurveyQuestionSummary {
-        return try {
-            val path = "v$bisnodeApiVersion/yes-no/$surveyName/$questionNumber"
-            val response = objectMapper.readValue(doRequest(path).content, BisnodeSurveySummary::class.java)
+        val path = "v$bisnodeApiVersion/yes-no/$surveyName/$questionNumber"
+        val response = objectMapper.readValue<BisnodeSurveySummary>(doRequest(path).content!!)
 
-            SurveyQuestionSummary(
-                positive = response.yes,
-                negative = response.total?.minus(response.yes!!),
-                total = response.total
-            )
-        } catch (e: Error) {
-            throw Error(e.localizedMessage)
-        }
+        return SurveyQuestionSummary(
+            positive = response.yes,
+            negative = response.total?.minus(response.yes!!),
+            total = response.total
+        )
     }
 
     /**
@@ -68,14 +68,10 @@ class BisnodeService {
      */
     @CacheResult(cacheName = "reviews-cache")
     fun listReviews(reviewProductName: String, reviewProductId: Int): List<Review> {
-        return try {
-            retrieveAllReviews(
-                reviewProductName = reviewProductName,
-                reviewProductId = reviewProductId
-            )
-        } catch (e: Error) {
-            throw e
-        }
+        return retrieveAllReviews(
+            reviewProductName = reviewProductName,
+            reviewProductId = reviewProductId
+        )
     }
 
     /**
@@ -104,7 +100,7 @@ class BisnodeService {
 
                 pagesRetrieved++
                 reviews.addAll(
-                    objectMapper.readValue(bisnodeResponse.content, Array<BisnodeReview>::class.java).toMutableList().map { bisnodeReview ->
+                    objectMapper.readValue<List<BisnodeReview>>(bisnodeResponse.content!!).toMutableList().map { bisnodeReview ->
                         Review(
                             id = bisnodeReview.id,
                             productId = reviewProductId,
@@ -114,8 +110,8 @@ class BisnodeService {
                     }
                 )
             } catch (e: Error) {
-                logger.error("Error while retrieving reviews for product: $reviewProductName, ${e.localizedMessage}")
-                retrievedAllReviews = true
+                logger.error("Error while retrieving reviews for product: $reviewProductName", e)
+                throw e
             }
         }
 

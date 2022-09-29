@@ -1,10 +1,11 @@
 package fi.metatavu.essote.palaute.api.controllers
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import fi.metatavu.essote.palaute.api.utils.FileUtils
+import com.fasterxml.jackson.module.kotlin.readValue
 import fi.metatavu.model.ReviewProduct
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.slf4j.Logger
+import java.io.File
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
@@ -18,10 +19,8 @@ class ReviewProductsController {
     lateinit var logger: Logger
 
     @Inject
-    lateinit var fileUtils: FileUtils
-
     @ConfigProperty(name = "products.file")
-    private lateinit var productsFilePath: String
+    private lateinit var productsFile: File
 
     /**
      * Finds a single review product by id
@@ -40,11 +39,11 @@ class ReviewProductsController {
      *
      * @return Array of ReviewProducts
      */
-    fun listReviewProducts(): Array<ReviewProduct> {
+    fun listReviewProducts(): List<ReviewProduct> {
         return try {
-            jacksonObjectMapper().readValue(fileUtils.readFromFile(productsFilePath), Array<ReviewProduct>::class.java)
+            jacksonObjectMapper().readValue(productsFile)
         } catch (e: Error) {
-            logger.error("Error while opening file $productsFilePath: ${e.localizedMessage}")
+            logger.error("Error while opening file ${productsFile.path}", e)
             throw e
         }
     }
