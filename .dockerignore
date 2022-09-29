@@ -3,3 +3,5 @@
 !build/*-runner.jar
 !build/lib/*
 !build/quarkus-app/*
+!build/resources/main/products.json
+!build/resources/main/surveys.json

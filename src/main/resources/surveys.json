@@ -1,0 +1,49 @@
+[
+  {
+    "name": "emergency",
+    "questions": [
+      {
+        "number": 1,
+        "question": "Saitko avun kokemaasi tarpeeseen, jonka takia saavuit päivystykseen?"
+      },
+      {
+        "number": 2,
+        "question": "Koetko saaneesi meiltä riittävät jatko-ohjeet käyntisi aikana?"
+      },
+      {
+        "number": 3,
+        "question": "Kerroimmeko sinulle sähköisestä asiointimahdollisuudesta, kanta.fi ja essote.fi?"
+      }
+    ]
+  },
+  {
+    "name": "reception",
+    "questions": [
+      {
+        "number": 1,
+        "question": "Koitko palveluun hakeutumisen sujuvaksi?"
+      },
+      {
+        "number": 2,
+        "question": "Saitko mielestäsi viime käynnilläsi selkeät jatko-ohjeet sinua hoitaneilta henkilöltä?"
+      },
+      {
+        "number": 3,
+        "question": "Kerroimmeko sinulle sähköisestä asiointimahdollisuudesta, kanta.fi ja essote.fi?"
+      }
+    ]
+  },
+  {
+    "name": "dentist",
+    "questions": [
+      {
+        "number": 1,
+        "question": "Koitko palveluun hakeutumisen sujuvaksi?"
+      },
+      {
+        "number": 2,
+        "question": "Saitko riittävästi tietoa sinulle annetusta hoidosta?"
+      }
+    ]
+  }
+]

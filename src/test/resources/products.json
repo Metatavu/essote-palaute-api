@@ -1,0 +1,14 @@
+[
+  {
+    "id": 4,
+    "name": "testProductFour",
+    "displayName": "Testi 4",
+    "link": "https://www.example.com/pathParamOne/pathParamTwo/"
+  },
+  {
+    "id": 5,
+    "name": "testProductFive",
+    "displayName": "Testi 5",
+    "link": "https://www.example.com/pathParamOne/pathParamTwo"
+  }
+]

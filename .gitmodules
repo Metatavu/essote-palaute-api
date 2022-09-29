@@ -1,3 +1,3 @@
 [submodule "essote-palaute-api-spec"]
 	path = essote-palaute-api-spec
-	url = git@github.com:Metatavu/essote-palaute-api-spec.git
+	url = https://github.com/Metatavu/essote-palaute-api-spec.git

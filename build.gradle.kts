@@ -15,6 +15,9 @@ repositories {
 val quarkusPlatformGroupId: String by project
 val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
+val javaJwtVersion: String by project
+val commonsTextVersion: String by project
+val wiremockVersion: String by project
 
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
@@ -23,8 +26,18 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-resteasy-reactive")
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.auth0:java-jwt:$javaJwtVersion")
+    implementation("org.apache.commons:commons-text:$commonsTextVersion")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+    implementation("io.quarkus:quarkus-cache")
+    implementation("io.quarkus:quarkus-scheduler")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
+    testImplementation("com.github.tomakehurst:wiremock-jre8:$wiremockVersion")
 }
 
 group = "fi.metatavu"
@@ -52,7 +65,7 @@ allOpen {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
     kotlinOptions.javaParameters = true
-    dependsOn("generateApiSpec", "generateApiClient")
+    dependsOn("generateApiSpec")
 }
 
 val generateApiSpec = tasks.register("generateApiSpec", GenerateTask::class) {
@@ -62,33 +75,18 @@ val generateApiSpec = tasks.register("generateApiSpec", GenerateTask::class) {
     setProperty("apiPackage", "${project.group}.spec")
     setProperty("invokerPackage", "${project.group}.invoker")
     setProperty("modelPackage", "${project.group}.model")
+    setProperty("templateDir", "$rootDir/openapi/api-spec")
 
     this.configOptions.put("library", "jaxrs-spec")
     this.configOptions.put("dateLibrary", "java8")
     this.configOptions.put("interfaceOnly", "true")
-    this.configOptions.put("useCoroutines", "true")
+    this.configOptions.put("useCoroutines", "false")
     this.configOptions.put("enumPropertyNaming", "UPPERCASE")
     this.configOptions.put("returnResponse", "true")
     this.configOptions.put("useSwaggerAnnotations", "false")
     this.configOptions.put("additionalModelTypeAnnotations", "@io.quarkus.runtime.annotations.RegisterForReflection")
 }
 
-val generateApiClient = tasks.register("generateApiClient", GenerateTask::class) {
-    setProperty("generatorName", "kotlin")
-    setProperty("library", "jvm-okhttp3")
-    setProperty("inputSpec", "$rootDir/essote-palaute-api-spec/swagger.yaml")
-    setProperty("outputDir", "$buildDir/generated/api-client")
-    setProperty("packageName", "${project.group}.test.client")
-    this.configOptions.put("dateLibrary", "string")
-    this.configOptions.put("collectionType", "array")
-    this.configOptions.put("serializationLibrary", "jackson")
-    this.configOptions.put("enumPropertyNaming", "UPPERCASE")
-}
-
 tasks.named("compileKotlin") {
     dependsOn(generateApiSpec)
-}
-
-tasks.named("compileTestKotlin") {
-    dependsOn(generateApiClient)
 }
